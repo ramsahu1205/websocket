@@ -4,6 +4,7 @@ import json
 
 # next create a socket object 
 d={"d0":0,"d1":0,"d2":0,"d3":0,"d5":0}
+userConn={}
 s = socket.socket()          
 print("Socket successfully created")
   
@@ -28,12 +29,17 @@ print("socket is listening")
 while True: 
   
    # Establish connection with client. 
-   c, addr = s.accept()      
-   print('Got connection from', addr) 
-   msg= json.loads(c.recv(1024).decode())
-   print(msg)
-   d[msg["key"]]=msg["value"]
-   # send a thank you message to the client.  
-   c.send(json.dumps(d).encode()) 
+   conn, addr = s.accept()
+   if  userConn.get(addr):
+      userConn[addr]=conn;  
+   data = conn.recv(1024)
+   if not data:
+      userConn[addr].close()
+   else:
+      print(type(data))
+      msg=json.loads(data.decode())
+      d[msg["key"]]=msg["value"]
+      conn.send(json.dumps(d).encode())
+
    # Close the connection with the client 
-   c.close()
+#c.close()
