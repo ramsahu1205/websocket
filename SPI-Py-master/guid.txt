@@ -1,0 +1,31 @@
+cd ~
+git clone https://github.com/lthiery/SPI-Py.git
+cd ~/SPI-Py
+sudo python setup.py install
+cd ~
+git clone https://github.com/pimylifeup/MFRC522-python.git
+To test, if the system is functioning correctly, lets write a small program:
+cd ~/
+sudo nano rfidreader.py
+this will open the Raspberry editor
+#!/usr/bin/env python
+
+import RPi.GPIO as GPIO
+import sys
+sys.path.append('/home/pi/MFRC522-python')
+from mfrc522 import SimpleMFRC522
+
+reader = SimpleMFRC522()
+
+print("Hold a tag near the reader")
+
+try:
+    id, text = reader.read()
+    print(id)
+    print(text)
+
+finally:
+    GPIO.cleanup()
+Copy the following code into the editor:
+
+To save the file press Ctrl + X then press Y and then press Enter.
